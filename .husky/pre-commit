@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "🔍 Running pre-commit checks..."
+
+# Run ESLint checks across all workspaces
+echo "📝 Checking ESLint..."
+if ! pnpm lint; then
+  echo "❌ ESLint checks failed. Please fix the errors before committing."
+  exit 1
+fi
+
+# Run TypeScript type checking across all workspaces
+echo "🔧 Checking TypeScript..."
+if ! pnpm exec turbo typecheck; then
+  echo "❌ TypeScript checks failed. Please fix the errors before committing."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"
