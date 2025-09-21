@@ -15,6 +15,28 @@
 - Shared packages are located in the `packages/` directory
 - Always respect the workspace structure when adding dependencies
 
+## Code Style
+
+- **Props Ordering**: Always arrange component props in alphabetical order
+  - Interface properties should be alphabetically ordered
+  - Function parameters should be alphabetically ordered when destructuring props
+  - This improves consistency and makes code easier to read and maintain
+  - Example:
+
+    ```tsx
+    // ✅ Correct - alphabetical order
+    interface ButtonProps {
+      className?: string;
+      disabled?: boolean;
+      onClick?: () => void;
+      variant?: "primary" | "secondary";
+    }
+
+    function Button({ className, disabled, onClick, variant }: ButtonProps) {
+      // ...
+    }
+    ```
+
 ## Commit Messages
 
 - Always use Conventional Commits specification (https://www.conventionalcommits.org/en/v1.0.0/)
