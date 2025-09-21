@@ -30,12 +30,12 @@ export function SignInPage({
       {/* Logo */}
       {showLogo && (
         <div className="absolute top-6 left-6 z-10">
-          {logoComponent || <div className="text-xl font-bold text-gray-900">Your Logo</div>}
+          {logoComponent || <div className="text-xl font-bold text-foreground">Your Logo</div>}
         </div>
       )}
 
       {/* Main Layout - Form Left, Illustration Right */}
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-background">
         <div className="flex h-screen">
           {/* Left side - Form */}
           <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
@@ -43,7 +43,7 @@ export function SignInPage({
           </div>
 
           {/* Right side - Illustration */}
-          <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-50">
+          <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-muted/30">
             {illustrationComponent}
           </div>
         </div>

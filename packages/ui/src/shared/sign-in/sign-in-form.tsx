@@ -44,19 +44,19 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
 
   return (
     <div className={cn("w-full max-w-md mx-auto", className)}>
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="bg-card rounded-lg shadow-lg p-8 border">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-normal text-gray-900 mb-2">Welcome !</h1>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Sign in to</h2>
-          <p className="text-sm text-gray-600">Lorem Ipsum is simply</p>
+          <h1 className="text-2xl font-normal text-foreground mb-2">Welcome !</h1>
+          <h2 className="text-3xl font-bold text-foreground mb-2">Sign in to</h2>
+          <p className="text-sm text-muted-foreground">Lorem Ipsum is simply</p>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username Field */}
           <div className="space-y-2">
-            <label htmlFor="username" className="text-sm font-medium text-gray-700">
+            <label htmlFor="username" className="text-sm font-medium text-foreground">
               User name
             </label>
             <Input
@@ -73,7 +73,7 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
 
           {/* Password Field */}
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
+            <label htmlFor="password" className="text-sm font-medium text-foreground">
               Password
             </label>
             <div className="relative">
@@ -90,7 +90,7 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 disabled={isLoading}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -109,13 +109,13 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
                 }
                 disabled={isLoading}
               />
-              <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer">
+              <label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">
                 Remember me
               </label>
             </div>
             <button
               type="button"
-              className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-sm text-primary hover:text-primary/80 transition-colors"
               disabled={isLoading}
             >
               Forgot Password?
@@ -123,21 +123,17 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
           </div>
 
           {/* Login Button */}
-          <Button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-black text-white hover:bg-gray-800 rounded-md h-12 text-base font-medium"
-          >
+          <Button type="submit" disabled={isLoading} className="w-full h-12 text-base font-medium">
             {isLoading ? "Signing in..." : "Login"}
           </Button>
 
           {/* Register Link */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-foreground">
               Don&apos;t have an Account?{" "}
               <button
                 type="button"
-                className="font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                className="font-semibold text-primary hover:text-primary/80 transition-colors"
                 disabled={isLoading}
               >
                 Register

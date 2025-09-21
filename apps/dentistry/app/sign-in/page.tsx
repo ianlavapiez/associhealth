@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { useState } from "react";
 
-import { SignInPage, type SignInFormData } from "@workspace/ui/shared/sign-in-page";
+import { SignInPage, type SignInFormData } from "@workspace/ui/shared";
 
 // Custom illustration component using dentistry.png
 function DentistryIllustration() {

@@ -1,2 +1,8 @@
-export { SignInForm, type SignInFormProps, type SignInFormData } from "./sign-in-form";
-export { SignInPage, type SignInPageProps } from "./sign-in-page";
+export {
+  SignInForm,
+  type SignInFormProps,
+  type SignInFormData,
+  SignInPage,
+  type SignInPageProps,
+} from "./sign-in";
+export { ThemeSwitcher, type ThemeSwitcherProps } from "./theme-switcher";
