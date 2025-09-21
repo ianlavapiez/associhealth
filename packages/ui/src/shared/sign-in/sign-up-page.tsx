@@ -2,53 +2,53 @@
 
 import { cn } from "@workspace/ui/lib/utils";
 
-import { SignInForm, type SignInFormData } from "./sign-in-form";
+import { SignUpForm, type SignUpFormData } from "./sign-up-form";
 
-export type { SignInFormData };
+export type { SignUpFormData };
 
-export interface SignInPageProps {
+export interface SignUpPageProps {
   className?: string;
   illustrationComponent: React.ReactNode;
   isLoading?: boolean;
   logoComponent?: React.ReactNode;
-  onNavigateToSignUp?: () => void;
-  onSubmit?: (data: SignInFormData) => void;
+  onNavigateToSignIn?: () => void;
+  onSubmit?: (data: SignUpFormData) => void;
   showLogo?: boolean;
 }
 
-export function SignInPage({
+export function SignUpPage({
   className,
   illustrationComponent,
   isLoading = false,
   logoComponent,
-  onNavigateToSignUp,
+  onNavigateToSignIn,
   onSubmit,
   showLogo = true,
-}: SignInPageProps) {
+}: SignUpPageProps) {
   return (
     <div className={cn("relative", className)}>
       {/* Logo */}
       {showLogo && (
-        <div className="absolute top-6 left-6 z-10">
+        <div className="absolute top-6 right-6 z-10">
           {logoComponent || <div className="text-xl font-bold text-foreground">Your Logo</div>}
         </div>
       )}
 
-      {/* Main Layout - Form Left, Illustration Right */}
+      {/* Main Layout - Illustration Left, Form Right */}
       <div className="min-h-screen bg-background">
         <div className="flex h-screen">
-          {/* Left side - Form */}
-          <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-            <SignInForm
-              isLoading={isLoading}
-              onNavigateToSignUp={onNavigateToSignUp}
-              onSubmit={onSubmit}
-            />
-          </div>
-
-          {/* Right side - Illustration */}
+          {/* Left side - Illustration */}
           <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-muted/30">
             {illustrationComponent}
+          </div>
+
+          {/* Right side - Form */}
+          <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+            <SignUpForm
+              isLoading={isLoading}
+              onNavigateToSignIn={onNavigateToSignIn}
+              onSubmit={onSubmit}
+            />
           </div>
         </div>
       </div>

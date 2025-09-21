@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -20,10 +20,10 @@ export function ThemeSwitcher({
   variant = "default",
 }: ThemeSwitcherProps) {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Prevent hydration mismatch
-  React.useEffect(() => {
+  useEffect(() => {
     setMounted(true);
   }, []);
 

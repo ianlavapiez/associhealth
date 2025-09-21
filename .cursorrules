@@ -37,6 +37,35 @@
     }
     ```
 
+- **React Imports**: Always use named imports from React instead of React.\* syntax
+  - Use `import { useEffect, useState } from "react"` instead of `import * as React from "react"`
+  - Use `useEffect()` instead of `React.useEffect()`
+  - Use `useState()` instead of `React.useState()`
+  - This improves tree-shaking and makes imports more explicit
+  - Example:
+
+    ```tsx
+    // ✅ Correct - named imports
+    import { useEffect, useState } from "react";
+
+    function Component() {
+      const [state, setState] = useState(false);
+      useEffect(() => {
+        // ...
+      }, []);
+    }
+
+    // ❌ Avoid - namespace import
+    import * as React from "react";
+
+    function Component() {
+      const [state, setState] = React.useState(false);
+      React.useEffect(() => {
+        // ...
+      }, []);
+    }
+    ```
+
 ## Commit Messages
 
 - Always use Conventional Commits specification (https://www.conventionalcommits.org/en/v1.0.0/)

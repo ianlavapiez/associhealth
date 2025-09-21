@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { SignInPage, type SignInFormData } from "@workspace/ui/shared";
+import { SignUpPage, type SignUpFormData } from "@workspace/ui/shared";
 
 // Custom illustration component using dentistry.png
 function DentistryIllustration() {
@@ -23,35 +23,35 @@ function DentistryIllustration() {
   );
 }
 
-export default function DentistrySignInPage() {
+export default function DentistrySignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // Set dynamic page title
   useEffect(() => {
-    document.title = "Sign In - Associhealth Dentistry";
+    document.title = "Sign Up - Associhealth Dentistry";
   }, []);
 
-  const handleSubmit = async (data: SignInFormData) => {
+  const handleSubmit = async (data: SignUpFormData) => {
     setIsLoading(true);
 
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    console.log("Sign in data:", data);
+    console.log("Sign up data:", data);
     setIsLoading(false);
   };
 
-  const handleNavigateToSignUp = () => {
-    router.push("/sign-up");
+  const handleNavigateToSignIn = () => {
+    router.push("/sign-in");
   };
 
   return (
-    <SignInPage
+    <SignUpPage
       illustrationComponent={<DentistryIllustration />}
       isLoading={isLoading}
       logoComponent={<div className="text-xl font-bold text-blue-600">Associhealth</div>}
-      onNavigateToSignUp={handleNavigateToSignUp}
+      onNavigateToSignIn={handleNavigateToSignIn}
       onSubmit={handleSubmit}
     />
   );

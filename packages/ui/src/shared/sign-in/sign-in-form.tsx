@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 import { Eye, EyeOff } from "lucide-react";
 
@@ -13,6 +13,7 @@ import { cn } from "@workspace/ui/lib/utils";
 export interface SignInFormProps {
   className?: string;
   isLoading?: boolean;
+  onNavigateToSignUp?: () => void;
   onSubmit?: (data: SignInFormData) => void;
 }
 
@@ -21,25 +22,29 @@ export interface SignInFormData {
   password: string;
 }
 
-export function SignInForm({ className, isLoading = false, onSubmit }: SignInFormProps) {
-  const [formData, setFormData] = React.useState<SignInFormData>({
+export function SignInForm({
+  className,
+  isLoading = false,
+  onNavigateToSignUp,
+  onSubmit,
+}: SignInFormProps) {
+  const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
   });
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit?.(formData);
   };
 
-  const handleInputChange =
-    (field: keyof SignInFormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({
-        ...prev,
-        [field]: e.target.value,
-      }));
-    };
+  const handleInputChange = (field: keyof SignInFormData) => (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: e.target.value,
+    }));
+  };
 
   const handleGoogleSignIn = () => {
     // Handle Google sign-in logic here
@@ -59,6 +64,7 @@ export function SignInForm({ className, isLoading = false, onSubmit }: SignInFor
               variant="link"
               className="p-0 h-auto font-semibold"
               disabled={isLoading}
+              onClick={onNavigateToSignUp}
             >
               Sign up
             </Button>

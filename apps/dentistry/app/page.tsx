@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect } from "react";
+
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import {
@@ -9,6 +13,11 @@ import {
 } from "@workspace/ui/components/select";
 
 export default function Page() {
+  // Set dynamic page title
+  useEffect(() => {
+    document.title = "Home - Associhealth Dentistry";
+  }, []);
+
   return (
     <div className="flex items-center justify-center min-h-svh bg-background">
       <div className="flex flex-col items-center justify-center gap-4">
