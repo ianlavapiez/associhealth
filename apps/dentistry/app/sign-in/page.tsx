@@ -1,58 +1,14 @@
-"use client";
+import { Metadata } from "next";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { dentistryConfig } from "@workspace/configs";
 
-import { useEffect, useState } from "react";
+import { SignInComponent } from "@/components/sign-in";
 
-import { SignInPage, type SignInFormData } from "@workspace/ui/shared";
+export const metadata: Metadata = {
+  title: "Login",
+  description: dentistryConfig.seo.description,
+};
 
-// Custom illustration component using dentistry.png
-function DentistryIllustration() {
-  return (
-    <div className="flex items-center justify-center p-8">
-      <Image
-        src="/dentistry.png"
-        alt="Dentistry illustration"
-        width={700}
-        height={600}
-        className="max-w-full h-auto object-contain"
-        priority
-      />
-    </div>
-  );
-}
-
-export default function DentistrySignInPage() {
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-
-  // Set dynamic page title
-  useEffect(() => {
-    document.title = "Sign In - Associhealth Dentistry";
-  }, []);
-
-  const handleSubmit = async (data: SignInFormData) => {
-    setIsLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    console.log("Sign in data:", data);
-    setIsLoading(false);
-  };
-
-  const handleNavigateToSignUp = () => {
-    router.push("/sign-up");
-  };
-
-  return (
-    <SignInPage
-      illustrationComponent={<DentistryIllustration />}
-      isLoading={isLoading}
-      logoComponent={<div className="text-xl font-bold text-blue-600">Associhealth</div>}
-      onNavigateToSignUp={handleNavigateToSignUp}
-      onSubmit={handleSubmit}
-    />
-  );
+export default function SignInPage() {
+  return <SignInComponent />;
 }

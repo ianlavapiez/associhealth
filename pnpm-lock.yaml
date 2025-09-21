@@ -29,6 +29,9 @@ importers:
 
   apps/dentistry:
     dependencies:
+      '@workspace/configs':
+        specifier: workspace:*
+        version: link:../../packages/configs
       '@workspace/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -65,6 +68,21 @@ importers:
         version: link:../../packages/typescript-config
       typescript:
         specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/configs:
+    devDependencies:
+      '@workspace/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@workspace/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      eslint:
+        specifier: ^9.32.0
+        version: 9.36.0(jiti@2.5.1)
+      typescript:
+        specifier: ^5.0.0
         version: 5.9.2
 
   packages/eslint-config:
