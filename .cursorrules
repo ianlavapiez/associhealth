@@ -1,0 +1,16 @@
+# Cursor Rules for AssociHealth Project
+
+## Package Manager
+
+- Always use `pnpm` as the package manager for installing dependencies
+- Use `pnpm install` instead of `npm install` or `yarn install`
+- Use `pnpm add <package>` instead of `npm install <package>` or `yarn add <package>`
+- Use `pnpm remove <package>` instead of `npm uninstall <package>` or `yarn remove <package>`
+- Use `pnpm run <script>` instead of `npm run <script>` or `yarn <script>`
+
+## Project Structure
+
+- This is a monorepo using pnpm workspaces
+- Apps are located in the `apps/` directory
+- Shared packages are located in the `packages/` directory
+- Always respect the workspace structure when adding dependencies

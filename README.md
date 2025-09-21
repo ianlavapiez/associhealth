@@ -1,19 +1,32 @@
-# shadcn/ui monorepo template
+# AssociHealth - shadcn/ui monorepo
 
-This template is for creating a monorepo with shadcn/ui.
+This is a monorepo template for AssociHealth using shadcn/ui components with pnpm workspaces.
 
-## Usage
+## Getting Started
 
 ```bash
-pnpm dlx shadcn@latest init
+pnpm install
+pnpm dev
 ```
 
-## Adding components
+## Adding shadcn/ui Components
 
-To add components to your app, run the following command at the root of your `web` app:
+### Quick Command (Recommended)
+
+Use the custom script to add components to the dentistry app:
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+pnpm run add-component button -c apps/dentistry
+pnpm run add-component input -c apps/dentistry
+pnpm run add-component card -c apps/dentistry
+```
+
+### Manual Command
+
+Alternatively, you can run the shadcn command directly:
+
+```bash
+pnpm dlx shadcn@latest add button -c apps/dentistry
 ```
 
 This will place the ui components in the `packages/ui/src/components` directory.
@@ -27,5 +40,5 @@ Your `tailwind.config.ts` and `globals.css` are already set up to use the compon
 To use the components in your app, import them from the `ui` package.
 
 ```tsx
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@workspace/ui/components/button";
 ```
