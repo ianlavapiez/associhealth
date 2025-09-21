@@ -5,12 +5,12 @@ import * as React from "react";
 import { cn } from "@workspace/ui/lib/utils";
 
 import { SignInForm, type SignInFormData } from "./sign-in-form";
-import { SignInIllustration } from "./sign-in-illustration";
 
 export type { SignInFormData };
 
 export interface SignInPageProps {
   className?: string;
+  illustrationComponent: React.ReactNode;
   isLoading?: boolean;
   logoComponent?: React.ReactNode;
   onSubmit?: (data: SignInFormData) => void;
@@ -19,6 +19,7 @@ export interface SignInPageProps {
 
 export function SignInPage({
   className,
+  illustrationComponent,
   isLoading = false,
   logoComponent,
   onSubmit,
@@ -43,7 +44,7 @@ export function SignInPage({
 
           {/* Right side - Illustration */}
           <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-gray-50">
-            <SignInIllustration />
+            {illustrationComponent}
           </div>
         </div>
       </div>
