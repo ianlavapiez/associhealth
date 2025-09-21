@@ -19,3 +19,15 @@ export {
   type User,
   type PlanInfo,
 } from "./sidebar";
+export {
+  DataTable,
+  DataTableColumnHeader,
+  DataTablePagination,
+  DataTableViewOptions,
+  type DataTableProps,
+  type DataTableAction,
+  type DataTableColumnHeaderProps,
+  type DataTablePaginationProps,
+  type DataTableViewOptionsProps,
+} from "./data-table";
+export { PageContainer, type PageContainerProps } from "./page-container";
