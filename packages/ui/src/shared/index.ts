@@ -11,3 +11,11 @@ export {
   type SignUpPageProps,
 } from "./sign-in";
 export { ThemeSwitcher, type ThemeSwitcherProps } from "./theme-switcher";
+export {
+  Sidebar,
+  type SidebarProps,
+  type Branch,
+  type NavigationItem,
+  type User,
+  type PlanInfo,
+} from "./sidebar";

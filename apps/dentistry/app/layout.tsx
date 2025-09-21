@@ -6,6 +6,7 @@ import { ThemeSwitcher } from "@workspace/ui/shared";
 
 import "@workspace/ui/globals.css";
 
+import { LayoutWrapper } from "@/components/layout/layout-wrapper";
 import { Providers } from "@/components/providers";
 
 const fontSans = Geist({
@@ -36,7 +37,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}>
         <Providers>
-          {children}
+          <LayoutWrapper>{children}</LayoutWrapper>
           <ThemeSwitcher />
         </Providers>
       </body>
