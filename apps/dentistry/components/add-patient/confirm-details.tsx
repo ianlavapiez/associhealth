@@ -5,12 +5,11 @@ import { Button } from "@workspace/ui/components/button";
 import { Separator } from "@workspace/ui/components/separator";
 import { CheckCircleIcon, FileTextIcon, UserIcon } from "lucide-react";
 
-import { MedicalHistoryData } from "./medical-history";
-import { PatientInfoData } from "./patient-information";
+import { type PatientInfoFormData, type MedicalHistoryFormData } from "@/lib/types";
 
 interface ConfirmDetailsProps {
-  patientInfo: PatientInfoData;
-  medicalHistory: MedicalHistoryData;
+  patientInfo: PatientInfoFormData;
+  medicalHistory: MedicalHistoryFormData;
   onPrevious: () => void;
   onSubmit: () => void;
 }

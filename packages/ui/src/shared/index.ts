@@ -32,3 +32,13 @@ export {
 } from "./data-table";
 export { PageContainer, type PageContainerProps } from "./page-container";
 export { PageHeader, type PageHeaderProps } from "./page-header";
+export {
+  Form,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+  useFormField,
+} from "../components/form";

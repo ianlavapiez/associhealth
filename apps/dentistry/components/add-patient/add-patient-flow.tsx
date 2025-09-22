@@ -5,23 +5,25 @@ import { useState } from "react";
 import { PageHeader } from "@workspace/ui/shared/page-header";
 import { CheckCircleIcon, FileTextIcon, UserIcon } from "lucide-react";
 
+import { type PatientInfoFormData, type MedicalHistoryFormData } from "@/lib/types";
+
 import { ConfirmDetails } from "./confirm-details";
-import { MedicalHistory, MedicalHistoryData } from "./medical-history";
-import { PatientInformation, PatientInfoData } from "./patient-information";
+import { MedicalHistory } from "./medical-history";
+import { PatientInformation } from "./patient-information";
 
 type Step = "patient-info" | "medical-history" | "confirm-details";
 
 export function AddPatientFlow() {
   const [currentStep, setCurrentStep] = useState<Step>("patient-info");
-  const [patientInfo, setPatientInfo] = useState<PatientInfoData | null>(null);
-  const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryData | null>(null);
+  const [patientInfo, setPatientInfo] = useState<PatientInfoFormData | null>(null);
+  const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryFormData | null>(null);
 
-  const handlePatientInfoNext = (data: PatientInfoData) => {
+  const handlePatientInfoNext = (data: PatientInfoFormData) => {
     setPatientInfo(data);
     setCurrentStep("medical-history");
   };
 
-  const handleMedicalHistoryNext = (data: MedicalHistoryData) => {
+  const handleMedicalHistoryNext = (data: MedicalHistoryFormData) => {
     setMedicalHistory(data);
     setCurrentStep("confirm-details");
   };

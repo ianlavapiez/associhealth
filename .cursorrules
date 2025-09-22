@@ -17,6 +17,25 @@
 
 ## Code Style
 
+- **Absolute Imports**: Always use absolute imports instead of relative imports
+  - Use `@/lib/validators` instead of `../../lib/validators`
+  - Use `@/components/add-patient` instead of `../add-patient`
+  - Use `@/lib/types` instead of `../../lib/types`
+  - This improves maintainability and makes refactoring easier
+  - Example:
+
+    ```tsx
+    // ✅ Correct - absolute imports
+    import { patientInfoSchema } from "@/lib/validators";
+    import { type PatientInfoFormData } from "@/lib/types";
+    import { PatientInformation } from "@/components/add-patient";
+
+    // ❌ Avoid - relative imports
+    import { patientInfoSchema } from "../../lib/validators";
+    import { type PatientInfoFormData } from "../../lib/types";
+    import { PatientInformation } from "../add-patient";
+    ```
+
 - **Props Ordering**: Always arrange component props in alphabetical order
   - Interface properties should be alphabetically ordered
   - Function parameters should be alphabetically ordered when destructuring props
