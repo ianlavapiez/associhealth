@@ -205,7 +205,5 @@ src/shared/data-table/
 ├── data-table-view-options.tsx # Column visibility toggle
 ├── types.ts                    # TypeScript types
 ├── index.ts                    # Exports
-├── examples/
-│   └── patients-example.tsx     # Example usage
 └── README.md                   # This file
 ```

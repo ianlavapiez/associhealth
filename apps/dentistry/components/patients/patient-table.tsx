@@ -1,11 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { DataTable, DataTableAction, DataTableColumnHeader } from "@workspace/ui/shared/data-table";
 import { Eye, FileText, Image, Pencil, Trash2 } from "lucide-react";
-
-import { DataTable } from "../data-table";
-import { DataTableColumnHeader } from "../data-table-column-header";
-import { DataTableAction } from "../types";
 
 // Patient type definition
 export interface Patient {
@@ -326,11 +323,19 @@ export const patientsActions: DataTableAction<Patient>[] = [
   },
 ];
 
-// Example usage component
-export function PatientsDataTableExample() {
+// Patient table component
+interface PatientTableProps {
+  onAdd?: () => void;
+}
+
+export function PatientTable({ onAdd }: PatientTableProps) {
   const handleAddPatient = () => {
-    console.log("Add new patient");
-    // Implement add patient logic
+    if (onAdd) {
+      onAdd();
+    } else {
+      console.log("Add new patient");
+      // Implement add patient logic
+    }
   };
 
   return (

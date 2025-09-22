@@ -29,6 +29,9 @@ importers:
 
   apps/dentistry:
     dependencies:
+      '@tanstack/react-table':
+        specifier: ^8.21.3
+        version: 8.21.3(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@workspace/configs':
         specifier: workspace:*
         version: link:../../packages/configs
