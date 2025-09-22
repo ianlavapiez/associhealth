@@ -2,7 +2,6 @@
 
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Separator } from "@workspace/ui/components/separator";
 import { CheckCircleIcon, FileTextIcon, UserIcon } from "lucide-react";
 
@@ -25,15 +24,13 @@ export function ConfirmDetails({
   const formatBoolean = (value: boolean) => (value ? "Yes" : "No");
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CheckCircleIcon className="size-5" />
-            Confirm Details
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-8">
+    <div className="h-full flex flex-col">
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <CheckCircleIcon className="size-5" />
+        <h2 className="text-lg font-semibold">Confirm Details</h2>
+      </div>
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="space-y-8 py-6">
           {/* Patient Information Summary */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -54,7 +51,13 @@ export function ConfirmDetails({
                 </div>
                 <div>
                   <span className="text-sm font-medium text-muted-foreground">Birthdate:</span>
-                  <p className="text-sm">{patientInfo.birthdate || "Not provided"}</p>
+                  <p className="text-sm">
+                    {patientInfo.birthdate
+                      ? typeof patientInfo.birthdate === "string"
+                        ? patientInfo.birthdate
+                        : patientInfo.birthdate.toLocaleDateString()
+                      : "Not provided"}
+                  </p>
                 </div>
                 <div>
                   <span className="text-sm font-medium text-muted-foreground">
@@ -146,7 +149,13 @@ export function ConfirmDetails({
                   <span className="text-sm font-medium text-muted-foreground">
                     Last Dental Visit:
                   </span>
-                  <p className="text-sm">{patientInfo.lastDentalVisit || "Not provided"}</p>
+                  <p className="text-sm">
+                    {patientInfo.lastDentalVisit
+                      ? typeof patientInfo.lastDentalVisit === "string"
+                        ? patientInfo.lastDentalVisit
+                        : patientInfo.lastDentalVisit.toLocaleDateString()
+                      : "Not provided"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -355,20 +364,16 @@ export function ConfirmDetails({
               </div>
             )}
           </div>
-
-          <Separator />
-
-          {/* Action Buttons */}
-          <div className="flex justify-between">
-            <Button type="button" variant="outline" onClick={onPrevious}>
-              Previous
-            </Button>
-            <Button onClick={onSubmit} size="lg" className="bg-green-600 hover:bg-green-700">
-              Submit Patient Registration
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+      <div className="flex justify-end gap-4 flex-shrink-0 py-4">
+        <Button type="button" variant="outline" onClick={onPrevious}>
+          Previous
+        </Button>
+        <Button onClick={onSubmit} size="lg" className="bg-green-600 hover:bg-green-700">
+          Submit Patient Registration
+        </Button>
+      </div>
     </div>
   );
 }

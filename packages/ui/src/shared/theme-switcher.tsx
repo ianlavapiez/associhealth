@@ -46,7 +46,7 @@ export function ThemeSwitcher({
 
   return (
     <Button
-      className={cn("fixed bottom-6 right-6 z-50", className)}
+      className={cn("fixed top-3 right-3 z-50", className)}
       onClick={toggleTheme}
       size={size}
       variant={variant}

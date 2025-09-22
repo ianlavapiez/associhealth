@@ -324,30 +324,14 @@ export const patientsActions: DataTableAction<Patient>[] = [
 ];
 
 // Patient table component
-interface PatientTableProps {
-  onAdd?: () => void;
-}
-
-export function PatientTable({ onAdd }: PatientTableProps) {
-  const handleAddPatient = () => {
-    if (onAdd) {
-      onAdd();
-    } else {
-      console.log("Add new patient");
-      // Implement add patient logic
-    }
-  };
-
+export function PatientTable() {
   return (
     <DataTable
       data={patientsData}
       columns={patientsColumns}
-      title="Patients"
       searchPlaceholder="Search by patient name, email, or mobile number."
       searchColumn="firstName" // This will search in firstName column
       actions={patientsActions}
-      onAdd={handleAddPatient}
-      addButtonText="Add Patient"
       enableRowSelection={true}
       enableColumnVisibility={true}
       enablePagination={true}

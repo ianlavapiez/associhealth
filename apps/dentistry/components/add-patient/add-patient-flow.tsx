@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { PageHeader } from "@workspace/ui/shared/page-header";
 import { CheckCircleIcon, FileTextIcon, UserIcon } from "lucide-react";
 
 import { ConfirmDetails } from "./confirm-details";
@@ -107,47 +108,45 @@ export function AddPatientFlow() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Progress Header */}
-      <div className="bg-white border-b">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold">Add New Patient</h1>
-            <div className="flex items-center space-x-8">
-              {(["patient-info", "medical-history", "confirm-details"] as Step[]).map(
-                (step, index) => (
-                  <div key={step} className="flex items-center">
-                    <div className="flex items-center space-x-2">
-                      {getStepIcon(step, isStepActive(step), isStepCompleted(step))}
-                      <span
-                        className={`text-sm font-medium ${
-                          isStepActive(step)
-                            ? "text-blue-600"
-                            : isStepCompleted(step)
-                              ? "text-green-600"
-                              : "text-muted-foreground"
-                        }`}
-                      >
-                        {getStepTitle(step)}
-                      </span>
-                    </div>
-                    {index < 2 && (
-                      <div
-                        className={`ml-4 w-8 h-px ${
-                          isStepCompleted(step) ? "bg-green-600" : "bg-gray-300"
-                        }`}
-                      />
-                    )}
+    <div className="space-y-6 h-full flex flex-col">
+      {/* Header with Title and Stepper */}
+      <PageHeader
+        title="Add New Patient"
+        actions={
+          <div className="flex items-center space-x-8">
+            {(["patient-info", "medical-history", "confirm-details"] as Step[]).map(
+              (step, index) => (
+                <div key={step} className="flex items-center">
+                  <div className="flex items-center space-x-2">
+                    {getStepIcon(step, isStepActive(step), isStepCompleted(step))}
+                    <span
+                      className={`text-sm font-medium ${
+                        isStepActive(step)
+                          ? "text-blue-600"
+                          : isStepCompleted(step)
+                            ? "text-green-600"
+                            : "text-muted-foreground"
+                      }`}
+                    >
+                      {getStepTitle(step)}
+                    </span>
                   </div>
-                )
-              )}
-            </div>
+                  {index < 2 && (
+                    <div
+                      className={`ml-4 w-8 h-px ${
+                        isStepCompleted(step) ? "bg-green-600" : "bg-gray-300"
+                      }`}
+                    />
+                  )}
+                </div>
+              )
+            )}
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Main Content */}
-      <div className="py-8">
+      <div className="flex-1 min-h-0">
         {currentStep === "patient-info" && <PatientInformation onNext={handlePatientInfoNext} />}
 
         {currentStep === "medical-history" && (

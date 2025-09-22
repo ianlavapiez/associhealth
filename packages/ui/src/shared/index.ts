@@ -31,3 +31,4 @@ export {
   type DataTableViewOptionsProps,
 } from "./data-table";
 export { PageContainer, type PageContainerProps } from "./page-container";
+export { PageHeader, type PageHeaderProps } from "./page-header";

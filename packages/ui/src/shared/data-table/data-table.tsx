@@ -122,19 +122,44 @@ export function DataTable<T>({
 
   return (
     <div className="w-full flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between py-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold">{title}</h1>
-          {onAdd && (
-            <Button onClick={onAdd}>
-              <Plus className="mr-2 h-4 w-4" />
-              {addButtonText}
-            </Button>
-          )}
-        </div>
+      {/* Header - only show if title is provided */}
+      {title && (
+        <div className="flex items-center justify-between py-4 flex-shrink-0">
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold">{title}</h1>
+            {onAdd && (
+              <Button onClick={onAdd}>
+                <Plus className="mr-2 h-4 w-4" />
+                {addButtonText}
+              </Button>
+            )}
+          </div>
 
-        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            {searchColumn && (
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder={searchPlaceholder}
+                  value={(table.getColumn(searchColumn)?.getFilterValue() as string) ?? ""}
+                  onChange={(event) =>
+                    table.getColumn(searchColumn)?.setFilterValue(event.target.value)
+                  }
+                  className="pl-8 w-96"
+                />
+              </div>
+            )}
+
+            {/* Column visibility toggle */}
+            {enableColumnVisibility && <DataTableViewOptions table={table} />}
+          </div>
+        </div>
+      )}
+
+      {/* Search and controls when no title */}
+      {!title && (searchColumn || enableColumnVisibility) && (
+        <div className="flex items-center justify-end gap-2 py-4 flex-shrink-0">
           {/* Search */}
           {searchColumn && (
             <div className="relative">
@@ -153,10 +178,10 @@ export function DataTable<T>({
           {/* Column visibility toggle */}
           {enableColumnVisibility && <DataTableViewOptions table={table} />}
         </div>
-      </div>
+      )}
 
       {/* Table */}
-      <div className="flex-1 flex flex-col overflow-hidden rounded-md border">
+      <div className="flex-1 flex flex-col rounded-md border min-h-0">
         <div className="overflow-y-auto flex-1">
           <Table>
             <TableHeader className="sticky top-0 bg-background z-10">

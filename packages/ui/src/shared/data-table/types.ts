@@ -11,7 +11,7 @@ export interface DataTableAction<T> {
 export interface DataTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
-  title: string;
+  title?: string;
   searchPlaceholder?: string;
   searchColumn?: string;
   actions?: DataTableAction<T>[];
