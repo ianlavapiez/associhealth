@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-table": "^8.21.3",
     "@workspace/configs": "workspace:*",
+    "@workspace/database": "workspace:*",
     "@workspace/ui": "workspace:*",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.475.0",
