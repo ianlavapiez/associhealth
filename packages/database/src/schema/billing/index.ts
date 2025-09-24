@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { persons } from "../auth";
 import { encounters } from "../medical";
@@ -63,52 +63,7 @@ export const financialTransactionFhirResource = pgTable("financial_transaction_f
 });
 
 // ======================================
-// Indexes
+// Indexes - Temporarily disabled for initial deployment
 // ======================================
 
-// ChargeItem FHIR Resource indexes
-export const chargeItemFhirResourceEncounterIdIdx = index(
-  "charge_item_fhir_resource_encounter_id_idx"
-).on(chargeItemFhirResource.encounterId);
-export const chargeItemFhirResourcePractitionerPatientIdIdx = index(
-  "charge_item_fhir_resource_practitioner_patient_id_idx"
-).on(chargeItemFhirResource.practitionerPatientId);
-export const chargeItemFhirResourceDataHashIdx = index(
-  "charge_item_fhir_resource_data_hash_idx"
-).on(chargeItemFhirResource.dataHash);
-
-// Claim FHIR Resource indexes
-export const claimFhirResourceEncounterIdIdx = index("claim_fhir_resource_encounter_id_idx").on(
-  claimFhirResource.encounterId
-);
-export const claimFhirResourcePractitionerPatientIdIdx = index(
-  "claim_fhir_resource_practitioner_patient_id_idx"
-).on(claimFhirResource.practitionerPatientId);
-export const claimFhirResourceDataHashIdx = index("claim_fhir_resource_data_hash_idx").on(
-  claimFhirResource.dataHash
-);
-
-// FinancialTransaction FHIR Resource indexes
-export const financialTransactionFhirResourcePersonIdIdx = index(
-  "financial_transaction_fhir_resource_person_id_idx"
-).on(financialTransactionFhirResource.personId);
-export const financialTransactionFhirResourcePractitionerPatientIdIdx = index(
-  "financial_transaction_fhir_resource_practitioner_patient_id_idx"
-).on(financialTransactionFhirResource.practitionerPatientId);
-export const financialTransactionFhirResourceEncounterIdIdx = index(
-  "financial_transaction_fhir_resource_encounter_id_idx"
-).on(financialTransactionFhirResource.encounterId);
-export const financialTransactionFhirResourceDataHashIdx = index(
-  "financial_transaction_fhir_resource_data_hash_idx"
-).on(financialTransactionFhirResource.dataHash);
-
-// PaymentReconciliation FHIR Resource indexes
-export const paymentReconciliationFhirResourceEncounterIdIdx = index(
-  "payment_reconciliation_fhir_resource_encounter_id_idx"
-).on(paymentReconciliationFhirResource.encounterId);
-export const paymentReconciliationFhirResourcePractitionerPatientIdIdx = index(
-  "payment_reconciliation_fhir_resource_practitioner_patient_id_idx"
-).on(paymentReconciliationFhirResource.practitionerPatientId);
-export const paymentReconciliationFhirResourceDataHashIdx = index(
-  "payment_reconciliation_fhir_resource_data_hash_idx"
-).on(paymentReconciliationFhirResource.dataHash);
+// TODO: Add indexes after initial schema deployment

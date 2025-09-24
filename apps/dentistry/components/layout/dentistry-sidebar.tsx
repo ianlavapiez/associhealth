@@ -56,7 +56,7 @@ const dentistryNavigationItems: NavigationItem[] = [
 const sampleBranches: Branch[] = [
   {
     id: "main-branch",
-    name: "AssociHealth Dentistry",
+    name: "Associhealth Dentistry",
     type: "Main Branch",
   },
   {

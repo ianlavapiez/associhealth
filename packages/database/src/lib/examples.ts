@@ -174,7 +174,7 @@ function batchDecrypt(values: string[]): string[] {
 
 function main() {
   try {
-    console.log("🔐 AssociHealth Encryption Model Examples\n");
+    console.log("🔐 Associhealth Encryption Model Examples\n");
 
     // Validate environment
     console.log("🔧 Validating environment...");

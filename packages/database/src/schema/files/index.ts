@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { encounters } from "../medical";
 import { practitionerPatients } from "../practitioners";
@@ -25,17 +25,7 @@ export const attachments = pgTable("attachments", {
 });
 
 // ======================================
-// Indexes
+// Indexes - Temporarily disabled for initial deployment
 // ======================================
 
-// Attachments indexes
-export const attachmentsEncounterIdIdx = index("attachments_encounter_id_idx").on(
-  attachments.encounterId
-);
-export const attachmentsFileTypeIdx = index("attachments_file_type_idx").on(attachments.fileType);
-export const attachmentsPractitionerPatientIdIdx = index(
-  "attachments_practitioner_patient_id_idx"
-).on(attachments.practitionerPatientId);
-export const attachmentsFileNameHashIdx = index("attachments_file_name_hash_idx").on(
-  attachments.fileNameHash
-);
+// TODO: Add indexes after initial schema deployment

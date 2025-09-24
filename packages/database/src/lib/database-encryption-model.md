@@ -1,6 +1,6 @@
 # Database Encryption Model
 
-This package provides comprehensive encryption utilities for protecting PHI (Protected Health Information) and sensitive data in the AssociHealth database.
+This package provides comprehensive encryption utilities for protecting PHI (Protected Health Information) and sensitive data in the Associhealth database.
 
 ## 🔐 Features
 
@@ -291,4 +291,4 @@ async function migrateToEncryption(db: any) {
 
 ## 📝 License
 
-This encryption model is part of the AssociHealth project and follows the same licensing terms.
+This encryption model is part of the Associhealth project and follows the same licensing terms.

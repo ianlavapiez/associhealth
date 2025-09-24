@@ -231,4 +231,39 @@ export const rlsPolicies = [
       WHERE pp.id = payment_reconciliation_fhir_resource.practitioner_patient_id
     )
   );`,
+
+  // Attachments - Practitioners can access attachments for their patients
+  sql`ALTER TABLE attachments ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY attachments_practitioner_select ON attachments FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = attachments.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY attachments_practitioner_update ON attachments FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = attachments.practitioner_patient_id
+    )
+  );`,
+
+  // Dental Chart Templates - Public read access for all authenticated users
+  sql`ALTER TABLE dental_chart_templates ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY dental_chart_templates_select ON dental_chart_templates FOR SELECT USING (auth.role() = 'authenticated');`,
+
+  // Dental Observation Codes - Public read access for all authenticated users
+  sql`ALTER TABLE dental_observation_codes ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY dental_observation_codes_select ON dental_observation_codes FOR SELECT USING (auth.role() = 'authenticated');`,
+
+  // Dental Procedure Codes - Public read access for all authenticated users
+  sql`ALTER TABLE dental_procedure_codes ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY dental_procedure_codes_select ON dental_procedure_codes FOR SELECT USING (auth.role() = 'authenticated');`,
+
+  // Tooth Numbering System - Public read access for all authenticated users
+  sql`ALTER TABLE tooth_numbering_system ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY tooth_numbering_system_select ON tooth_numbering_system FOR SELECT USING (auth.role() = 'authenticated');`,
 ];

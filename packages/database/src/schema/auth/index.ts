@@ -1,14 +1,5 @@
 import { sql } from "drizzle-orm";
-import {
-  boolean,
-  index,
-  jsonb,
-  pgTable,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { boolean, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { identifierTypeEnum } from "../enums";
 
@@ -81,48 +72,25 @@ export const users = pgTable("users", {
 });
 
 // ======================================
-// Indexes
+// Indexes - Temporarily disabled for initial deployment
 // ======================================
 
-// Person Identifiers indexes
-export const personIdentifiersCountryIdx = index("person_identifiers_country_idx").on(
-  personIdentifiers.country
-);
-export const personIdentifiersIsValidIdx = index("person_identifiers_is_valid_idx").on(
-  personIdentifiers.isValid
-);
-export const personIdentifiersPersonIdIdx = index("person_identifiers_person_id_idx").on(
-  personIdentifiers.personId
-);
-export const personIdentifiersTypeIdx = index("person_identifiers_type_idx").on(
-  personIdentifiers.type
-);
-export const personIdentifiersValueHashIdx = index("person_identifiers_value_hash_idx").on(
-  personIdentifiers.valueHash
-);
-
-// Persons indexes
-export const personsFirstNameHashIdx = index("persons_first_name_hash_idx").on(
-  persons.firstNameHash
-);
-export const personsLastNameHashIdx = index("persons_last_name_hash_idx").on(persons.lastNameHash);
-export const personsEmailHashIdx = index("persons_email_hash_idx").on(persons.emailHash);
-export const personsPhoneHashIdx = index("persons_phone_hash_idx").on(persons.phoneHash);
-export const personsNameSearchIdx = index("persons_name_search_idx").using(
-  "gin",
-  sql`to_tsvector('english', ${persons.firstName} || ' ' || ${persons.lastName})`
-);
-// Composite indexes for common queries
-export const personsNameCompositeIdx = index("persons_name_composite_idx").on(
-  persons.firstNameHash,
-  persons.lastNameHash
-);
-export const personIdentifiersTypeValueIdx = index("person_identifiers_type_value_idx").on(
-  personIdentifiers.type,
-  personIdentifiers.valueHash
-);
-
-// Users indexes
-export const usersEmailIdx = index("users_email_idx").on(users.email);
-export const usersPersonIdIdx = index("users_person_id_idx").on(users.personId);
-export const usersRoleIdx = index("users_role_idx").on(users.role);
+// TODO: Add indexes after initial schema deployment
+// export const personIdentifiersPersonIdIdx = index("person_identifiers_person_id_idx").on(
+//   personIdentifiers.personId
+// );
+// export const personIdentifiersTypeIdx = index("person_identifiers_type_idx").on(
+//   personIdentifiers.type
+// );
+// export const personIdentifiersValueHashIdx = index("person_identifiers_value_hash_idx").on(
+//   personIdentifiers.valueHash
+// );
+// export const personsFirstNameHashIdx = index("persons_first_name_hash_idx").on(
+//   persons.firstNameHash
+// );
+// export const personsLastNameHashIdx = index("persons_last_name_hash_idx").on(persons.lastNameHash);
+// export const personsEmailHashIdx = index("persons_email_hash_idx").on(persons.emailHash);
+// export const personsPhoneHashIdx = index("persons_phone_hash_idx").on(persons.phoneHash);
+// export const usersEmailIdx = index("users_email_idx").on(users.email);
+// export const usersPersonIdIdx = index("users_person_id_idx").on(users.personId);
+// export const usersRoleIdx = index("users_role_idx").on(users.role);

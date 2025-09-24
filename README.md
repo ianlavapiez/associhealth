@@ -1,6 +1,6 @@
-# AssociHealth - shadcn/ui monorepo
+# Associhealth - shadcn/ui monorepo
 
-This is a monorepo template for AssociHealth using shadcn/ui components with pnpm workspaces.
+This is a monorepo template for Associhealth using shadcn/ui components with pnpm workspaces.
 
 ## Getting Started
 

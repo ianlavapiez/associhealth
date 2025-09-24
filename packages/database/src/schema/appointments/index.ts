@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 import { practitionerPatients, practitioners } from "../practitioners";
 
@@ -32,21 +32,7 @@ export const scheduleFhirResource = pgTable("schedule_fhir_resource", {
 });
 
 // ======================================
-// Indexes
+// Indexes - Temporarily disabled for initial deployment
 // ======================================
 
-// Appointment FHIR Resource indexes
-export const appointmentFhirResourcePractitionerPatientIdIdx = index(
-  "appointment_fhir_resource_practitioner_patient_id_idx"
-).on(appointmentFhirResource.practitionerPatientId);
-export const appointmentFhirResourceDataHashIdx = index(
-  "appointment_fhir_resource_data_hash_idx"
-).on(appointmentFhirResource.dataHash);
-
-// Schedule FHIR Resource indexes
-export const scheduleFhirResourcePractitionerIdIdx = index(
-  "schedule_fhir_resource_practitioner_id_idx"
-).on(scheduleFhirResource.practitionerId);
-export const scheduleFhirResourceDataHashIdx = index("schedule_fhir_resource_data_hash_idx").on(
-  scheduleFhirResource.dataHash
-);
+// TODO: Add indexes after initial schema deployment
