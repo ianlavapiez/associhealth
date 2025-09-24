@@ -24,12 +24,14 @@ export const personIdentifiers = pgTable("person_identifiers", {
     .references(() => persons.id)
     .notNull(),
   type: identifierTypeEnum("type").notNull(),
-  value: varchar("value", { length: 100 }).notNull(),
-  issuingAuthority: varchar("issuing_authority", { length: 100 }), // e.g., "US SSA", "Philippine SSS", "DMV"
-  country: varchar("country", { length: 3 }), // ISO country code
+  issuingAuthority: varchar("issuing_authority", { length: 100 }),
+  country: varchar("country", { length: 3 }),
   isValid: boolean("is_valid").default(true),
   expiresAt: timestamp("expires_at"),
-  metadata: jsonb("metadata").default(sql`'{}'::jsonb`), // Additional identifier-specific data
+  metadata: jsonb("metadata").default(sql`'{}'::jsonb`),
+  // Encrypted fields
+  value: text("value").notNull(), // Encrypted identifier value
+  valueHash: varchar("value_hash", { length: 64 }), // For exact matching
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
@@ -39,9 +41,27 @@ export const persons = pgTable("persons", {
   id: uuid("id")
     .primaryKey()
     .default(sql`uuid_generate_v4()`),
-  phones: jsonb("phones").default(sql`'[]'::jsonb`),
-  emails: jsonb("emails").default(sql`'[]'::jsonb`),
-  demographics: jsonb("demographics").default(sql`'{}'::jsonb`),
+  // Encrypted PHI fields
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  middleName: text("middle_name"),
+  email: text("email"),
+  phone: text("phone"),
+  address: text("address"),
+  birthdate: text("birthdate"),
+  gender: text("gender"),
+  nationality: text("nationality"),
+  occupation: text("occupation"),
+  religion: text("religion"),
+  // Encrypted JSON fields for complex data
+  phones: text("phones"), // Encrypted phones array
+  emails: text("emails"), // Encrypted emails array
+  demographics: text("demographics"), // Encrypted demographics object
+  // Searchable hashes for exact matching
+  firstNameHash: varchar("first_name_hash", { length: 64 }),
+  lastNameHash: varchar("last_name_hash", { length: 64 }),
+  emailHash: varchar("email_hash", { length: 64 }),
+  phoneHash: varchar("phone_hash", { length: 64 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
   deletedAt: timestamp("deleted_at"),
@@ -77,17 +97,30 @@ export const personIdentifiersPersonIdIdx = index("person_identifiers_person_id_
 export const personIdentifiersTypeIdx = index("person_identifiers_type_idx").on(
   personIdentifiers.type
 );
-export const personIdentifiersValueIdx = index("person_identifiers_value_idx").on(
-  personIdentifiers.value
+export const personIdentifiersValueHashIdx = index("person_identifiers_value_hash_idx").on(
+  personIdentifiers.valueHash
 );
 
 // Persons indexes
-export const personsDemographicsIdx = index("persons_demographics_idx").using(
-  "gin",
-  persons.demographics
+export const personsFirstNameHashIdx = index("persons_first_name_hash_idx").on(
+  persons.firstNameHash
 );
-export const personsEmailsIdx = index("persons_emails_idx").using("gin", persons.emails);
-export const personsPhonesIdx = index("persons_phones_idx").using("gin", persons.phones);
+export const personsLastNameHashIdx = index("persons_last_name_hash_idx").on(persons.lastNameHash);
+export const personsEmailHashIdx = index("persons_email_hash_idx").on(persons.emailHash);
+export const personsPhoneHashIdx = index("persons_phone_hash_idx").on(persons.phoneHash);
+export const personsNameSearchIdx = index("persons_name_search_idx").using(
+  "gin",
+  sql`to_tsvector('english', ${persons.firstName} || ' ' || ${persons.lastName})`
+);
+// Composite indexes for common queries
+export const personsNameCompositeIdx = index("persons_name_composite_idx").on(
+  persons.firstNameHash,
+  persons.lastNameHash
+);
+export const personIdentifiersTypeValueIdx = index("person_identifiers_type_value_idx").on(
+  personIdentifiers.type,
+  personIdentifiers.valueHash
+);
 
 // Users indexes
 export const usersEmailIdx = index("users_email_idx").on(users.email);

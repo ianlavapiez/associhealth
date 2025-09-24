@@ -195,4 +195,313 @@ export const rlsPolicies = [
       WHERE pp.id = attachments.practitioner_patient_id
     )
   );`,
+
+  // AllergyIntolerance FHIR Resource - Patients can access their own allergies, practitioners only if access granted
+  sql`ALTER TABLE allergy_intolerance_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY allergy_intolerance_fhir_owner_select ON allergy_intolerance_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = allergy_intolerance_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY allergy_intolerance_fhir_practitioner_select ON allergy_intolerance_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = allergy_intolerance_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+  sql`CREATE POLICY allergy_intolerance_fhir_owner_update ON allergy_intolerance_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = allergy_intolerance_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY allergy_intolerance_fhir_practitioner_update ON allergy_intolerance_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = allergy_intolerance_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+
+  // Condition FHIR Resource - Patients can access their own conditions, practitioners only if access granted
+  sql`ALTER TABLE condition_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY condition_fhir_owner_select ON condition_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = condition_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY condition_fhir_practitioner_select ON condition_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = condition_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+  sql`CREATE POLICY condition_fhir_owner_update ON condition_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = condition_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY condition_fhir_practitioner_update ON condition_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = condition_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+
+  // MedicationStatement FHIR Resource - Patients can access their own medications, practitioners only if access granted
+  sql`ALTER TABLE medication_statement_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY medication_statement_fhir_owner_select ON medication_statement_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = medication_statement_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY medication_statement_fhir_practitioner_select ON medication_statement_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = medication_statement_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+  sql`CREATE POLICY medication_statement_fhir_owner_update ON medication_statement_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = medication_statement_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY medication_statement_fhir_practitioner_update ON medication_statement_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = medication_statement_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+
+  // DiagnosticReport FHIR Resource - Practitioners can access diagnostic reports for their patients
+  sql`ALTER TABLE diagnostic_report_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY diagnostic_report_fhir_practitioner_select ON diagnostic_report_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = diagnostic_report_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY diagnostic_report_fhir_practitioner_update ON diagnostic_report_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = diagnostic_report_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // RiskAssessment FHIR Resource - Practitioners can access risk assessments for their patients
+  sql`ALTER TABLE risk_assessment_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY risk_assessment_fhir_practitioner_select ON risk_assessment_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = risk_assessment_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY risk_assessment_fhir_practitioner_update ON risk_assessment_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = risk_assessment_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // FamilyMemberHistory FHIR Resource - Patients can access their own family history, practitioners only if access granted
+  sql`ALTER TABLE family_member_history_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY family_member_history_fhir_owner_select ON family_member_history_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = family_member_history_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY family_member_history_fhir_practitioner_select ON family_member_history_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = family_member_history_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+  sql`CREATE POLICY family_member_history_fhir_owner_update ON family_member_history_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT u.id::text 
+      FROM users u 
+      WHERE u.person_id = family_member_history_fhir_resource.person_id
+    )
+  );`,
+  sql`CREATE POLICY family_member_history_fhir_practitioner_update ON family_member_history_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.person_id = family_member_history_fhir_resource.person_id 
+      AND pp.access_status = 'granted'
+    )
+  );`,
+
+  // FinancialTransaction FHIR Resource - Practitioners can access financial transactions for their patients
+  sql`ALTER TABLE financial_transaction_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY financial_transaction_fhir_practitioner_select ON financial_transaction_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = financial_transaction_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY financial_transaction_fhir_practitioner_update ON financial_transaction_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = financial_transaction_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // Appointment FHIR Resource - Practitioners can access appointments for their patients
+  sql`ALTER TABLE appointment_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY appointment_fhir_practitioner_select ON appointment_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = appointment_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY appointment_fhir_practitioner_update ON appointment_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = appointment_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // Schedule FHIR Resource - Practitioners can access their own schedules
+  sql`ALTER TABLE schedule_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY schedule_fhir_practitioner_select ON schedule_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      WHERE p.id = schedule_fhir_resource.practitioner_id
+    )
+  );`,
+  sql`CREATE POLICY schedule_fhir_practitioner_update ON schedule_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      WHERE p.id = schedule_fhir_resource.practitioner_id
+    )
+  );`,
+
+  // Slot FHIR Resource - Practitioners can access slots for their schedules
+  sql`ALTER TABLE slot_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY slot_fhir_practitioner_select ON slot_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN schedule_fhir_resource s ON p.id = s.practitioner_id 
+      WHERE s.id = slot_fhir_resource.schedule_id
+    )
+  );`,
+  sql`CREATE POLICY slot_fhir_practitioner_update ON slot_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN schedule_fhir_resource s ON p.id = s.practitioner_id 
+      WHERE s.id = slot_fhir_resource.schedule_id
+    )
+  );`,
+
+  // ChargeItem FHIR Resource - Practitioners can access charge items for their patients
+  sql`ALTER TABLE charge_item_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY charge_item_fhir_practitioner_select ON charge_item_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = charge_item_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY charge_item_fhir_practitioner_update ON charge_item_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = charge_item_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // Claim FHIR Resource - Practitioners can access claims for their patients
+  sql`ALTER TABLE claim_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY claim_fhir_practitioner_select ON claim_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = claim_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY claim_fhir_practitioner_update ON claim_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = claim_fhir_resource.practitioner_patient_id
+    )
+  );`,
+
+  // PaymentReconciliation FHIR Resource - Practitioners can access payment reconciliations for their patients
+  sql`ALTER TABLE payment_reconciliation_fhir_resource ENABLE ROW LEVEL SECURITY;`,
+  sql`CREATE POLICY payment_reconciliation_fhir_practitioner_select ON payment_reconciliation_fhir_resource FOR SELECT USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = payment_reconciliation_fhir_resource.practitioner_patient_id
+    )
+  );`,
+  sql`CREATE POLICY payment_reconciliation_fhir_practitioner_update ON payment_reconciliation_fhir_resource FOR UPDATE USING (
+    auth.uid() IN (
+      SELECT p.user_id::text 
+      FROM practitioners p 
+      JOIN practitioner_patients pp ON p.id = pp.practitioner_id 
+      WHERE pp.id = payment_reconciliation_fhir_resource.practitioner_patient_id
+    )
+  );`,
 ];
