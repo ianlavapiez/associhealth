@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
-import { persons } from "../auth/index.js";
-import { practitionerPatients } from "../practitioners/index.js";
+import { persons } from "../auth";
+import { practitionerPatients } from "../practitioners";
 
 // ======================================
 // Tables

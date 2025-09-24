@@ -3,25 +3,28 @@
 // ======================================
 
 // Enums
-export * from "./enums.js";
-
-// Auth module
-export * from "./auth/index.js";
-
-// Practitioners module
-export * from "./practitioners/index.js";
-
-// Medical module
-export * from "./medical/index.js";
-
-// Files module
-export * from "./files/index.js";
+export * from "./enums";
 
 // Appointments module
-export * from "./appointments/index.js";
+export * from "./appointments";
+
+// Auth module
+export * from "./auth";
 
 // Billing module
-export * from "./billing/index.js";
+export * from "./billing";
+
+// Dentistry module
+export * from "./dentistry";
+
+// Files module
+export * from "./files";
+
+// Medical module
+export * from "./medical";
 
 // Policies module
-export * from "./policies/index.js";
+export * from "./policies";
+
+// Practitioners module
+export * from "./practitioners";

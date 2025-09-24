@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm";
 import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
-import { practitionerPatients, practitioners } from "../practitioners/index.js";
+import { practitionerPatients, practitioners } from "../practitioners";
 
 // ======================================
 // Tables

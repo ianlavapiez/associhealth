@@ -1,8 +1,8 @@
 import { sql } from "drizzle-orm";
 import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
-import { persons, users } from "../auth/index.js";
-import { accessStatusEnum } from "../enums.js";
+import { persons, users } from "../auth";
+import { accessStatusEnum } from "../enums";
 
 // ======================================
 // Tables

@@ -2,14 +2,17 @@
 // Types Re-exports
 // ======================================
 
-// Identifiers module
-export * from "./identifiers/index.js";
-
 // Auth module
-export * from "./auth/index.js";
+export * from "./auth";
 
-// Practitioners module
-export * from "./practitioners/index.js";
+// Dentistry module
+export * from "./dentistry";
+
+// Identifiers module
+export * from "./identifiers";
 
 // Medical module
-export * from "./medical/index.js";
+export * from "./medical";
+
+// Practitioners module
+export * from "./practitioners";

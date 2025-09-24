@@ -10,7 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { identifierTypeEnum } from "../enums.js";
+import { identifierTypeEnum } from "../enums";
 
 // ======================================
 // Tables
