@@ -2,12 +2,8 @@
 // Encryption Model Tests - Simplified
 // ======================================
 
-// Load environment variables from database package directory
-import { config } from "dotenv";
-import { resolve } from "path";
-
-// Load .env file from database package directory (2 levels up from this file)
-config({ path: resolve(import.meta.dirname, "../../.env") });
+// Note: Environment variables should be loaded by the parent process
+// or set in your shell before running this script
 
 // Import the comprehensive performance tests from examples.ts
 import { runPerformanceTests } from "./examples";
