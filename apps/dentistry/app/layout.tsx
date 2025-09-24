@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { dentistryConfig } from "@workspace/configs";
+import { Toaster } from "@workspace/ui/components/sonner";
 import { ThemeSwitcher } from "@workspace/ui/shared";
 
 import "@workspace/ui/globals.css";
@@ -39,6 +40,7 @@ export default function RootLayout({
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
           <ThemeSwitcher />
+          <Toaster position="top-right" richColors />
         </Providers>
       </body>
     </html>
