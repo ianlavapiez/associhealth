@@ -45,7 +45,7 @@ export const practitioners = pgTable("practitioners", {
   personId: uuid("person_id").references(() => users.personId),
   userId: uuid("user_id").references(() => users.id),
   specializationId: uuid("specialization_id").references(() => specialties.id),
-  licenseNumber: text("license_number").notNull(),
+  licenseNumber: text("license_number"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
   deletedAt: timestamp("deleted_at"),

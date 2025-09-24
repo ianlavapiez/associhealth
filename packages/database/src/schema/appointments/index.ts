@@ -4,7 +4,7 @@ import { index, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-c
 import { practitionerPatients, practitioners } from "../practitioners";
 
 // ======================================
-// Tables
+// Essential Tables Only
 // ======================================
 
 export const appointmentFhirResource = pgTable("appointment_fhir_resource", {
@@ -31,18 +31,6 @@ export const scheduleFhirResource = pgTable("schedule_fhir_resource", {
   deletedAt: timestamp("deleted_at"),
 });
 
-export const slotFhirResource = pgTable("slot_fhir_resource", {
-  id: uuid("id")
-    .primaryKey()
-    .default(sql`uuid_generate_v4()`),
-  scheduleId: uuid("schedule_id").references(() => scheduleFhirResource.id),
-  data: text("data").notNull(), // Encrypted FHIR Slot resource
-  dataHash: varchar("data_hash", { length: 64 }), // For integrity checking
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-});
-
 // ======================================
 // Indexes
 // ======================================
@@ -61,12 +49,4 @@ export const scheduleFhirResourcePractitionerIdIdx = index(
 ).on(scheduleFhirResource.practitionerId);
 export const scheduleFhirResourceDataHashIdx = index("schedule_fhir_resource_data_hash_idx").on(
   scheduleFhirResource.dataHash
-);
-
-// Slot FHIR Resource indexes
-export const slotFhirResourceScheduleIdIdx = index("slot_fhir_resource_schedule_id_idx").on(
-  slotFhirResource.scheduleId
-);
-export const slotFhirResourceDataHashIdx = index("slot_fhir_resource_data_hash_idx").on(
-  slotFhirResource.dataHash
 );

@@ -6,7 +6,7 @@ import { encounters } from "../medical";
 import { practitionerPatients } from "../practitioners";
 
 // ======================================
-// Tables
+// Essential Tables Only
 // ======================================
 
 export const chargeItemFhirResource = pgTable("charge_item_fhir_resource", {
