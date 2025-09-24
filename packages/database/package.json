@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -16,7 +19,10 @@
     "postgres": "^3.4.7"
   },
   "devDependencies": {
+    "@types/node": "^24.5.2",
     "@workspace/typescript-config": "workspace:*",
+    "dotenv": "^17.2.2",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "scripts": {
@@ -24,6 +30,8 @@
     "build": "tsc",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "examples": "tsx src/lib/examples.ts",
+    "test:crypto": "tsx src/lib/test-crypto.ts"
   }
 }

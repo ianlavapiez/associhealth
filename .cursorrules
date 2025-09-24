@@ -3,6 +3,7 @@
 ## Package Manager
 
 - Always use `pnpm` as the package manager for installing dependencies
+- **Node.js Version**: Always run `nvm use` before installing dependencies to ensure Node.js 22+ is used
 - Use `pnpm install` instead of `npm install` or `yarn install`
 - Use `pnpm add <package>` instead of `npm install <package>` or `yarn add <package>`
 - Use `pnpm remove <package>` instead of `npm uninstall <package>` or `yarn remove <package>`

@@ -14,7 +14,8 @@
       "dependsOn": ["^check-types"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"]
+      "dependsOn": ["^typecheck"],
+      "env": ["DATABASE_ENCRYPTION_KEY", "DATABASE_HASH_SALT", "DATABASE_URL", "DATABASE_SSL"]
     },
     "dev": {
       "cache": false,

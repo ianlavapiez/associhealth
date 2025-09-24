@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "lint": "eslint . --max-warnings 0"
   },
@@ -58,7 +61,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
     "@turbo/gen": "^2.5.5",
-    "@types/node": "^20.19.9",
+    "@types/node": "^24.5.2",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "@workspace/eslint-config": "workspace:*",
