@@ -15,7 +15,10 @@
     "./migrations": "./src/migrations/index.ts"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.57.4",
     "drizzle-orm": "^0.44.5",
+    "next": "^15.5.3",
     "postgres": "^3.4.7"
   },
   "devDependencies": {

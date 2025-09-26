@@ -62,8 +62,8 @@ export const users = pgTable("users", {
   id: uuid("id")
     .primaryKey()
     .default(sql`uuid_generate_v4()`),
+  supabaseUserId: uuid("supabase_user_id").unique(),
   personId: uuid("person_id").references(() => persons.id),
-  email: text("email").notNull(),
   role: varchar("role", { length: 50 }).notNull(),
   provider: varchar("provider", { length: 50 }).default("supabase"),
   createdAt: timestamp("created_at").defaultNow().notNull(),

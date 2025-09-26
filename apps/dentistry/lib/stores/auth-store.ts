@@ -22,6 +22,7 @@ export interface User {
   id: string;
   personId?: string;
   role: string;
+  supabaseUserId?: string;
 }
 
 export type AuthStore = AuthState & AuthActions;
