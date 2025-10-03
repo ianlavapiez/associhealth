@@ -166,8 +166,8 @@ export async function signUpAction(formData: SignUpFormData): Promise<SignUpResu
       const [person] = await tx
         .insert(persons)
         .values({
-          email: encrypt(validatedData.email),
-          emailHash: hashPHI(validatedData.email),
+          email: await encrypt(validatedData.email),
+          emailHash: await hashPHI(validatedData.email),
           createdAt: timestamps.createdAt,
           updatedAt: timestamps.updatedAt,
         })

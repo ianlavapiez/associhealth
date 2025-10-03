@@ -1,11 +1,5 @@
-import {
-  createCipheriv,
-  createDecipheriv,
-  createHash,
-  randomBytes,
-  type CipherGCM,
-  type DecipherGCM,
-} from "crypto";
+// Web Crypto API imports - no need to import crypto module
+// All operations use the global crypto.subtle API
 
 // ======================================
 // Encryption Configuration
@@ -32,8 +26,37 @@ export const DEFAULT_CRYPTO_CONFIG: CryptoConfig = {
 /**
  * Derives a key from a master key and salt using PBKDF2
  */
-function deriveKey(masterKey: string, salt: Buffer): Buffer {
-  return createHash("sha256").update(masterKey).update(salt).digest();
+async function deriveKey(masterKey: string, salt: Uint8Array): Promise<CryptoKey> {
+  if (typeof crypto === "undefined" || !crypto.subtle) {
+    throw new Error("Web Crypto API is not available in this environment");
+  }
+
+  // Import the master key as a CryptoKey
+  const masterKeyData = new TextEncoder().encode(masterKey);
+  const masterKeyCryptoKey = await crypto.subtle.importKey("raw", masterKeyData, "PBKDF2", false, [
+    "deriveBits",
+    "deriveKey",
+  ]);
+
+  // Derive the key using PBKDF2
+  const saltBuffer = salt.slice().buffer;
+  const derivedKey = await crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: saltBuffer,
+      iterations: 100000, // Standard PBKDF2 iteration count
+      hash: "SHA-256",
+    },
+    masterKeyCryptoKey,
+    {
+      name: "AES-GCM",
+      length: 256,
+    },
+    false,
+    ["encrypt", "decrypt"]
+  );
+
+  return derivedKey;
 }
 
 /**
@@ -55,33 +78,65 @@ function getMasterKey(): string {
 // ======================================
 
 /**
+ * Generates random bytes using Web Crypto API
+ */
+function getRandomBytes(length: number): Uint8Array {
+  if (typeof crypto === "undefined" || !crypto.getRandomValues) {
+    throw new Error("Web Crypto API is not available in this environment");
+  }
+
+  return crypto.getRandomValues(new Uint8Array(length));
+}
+
+/**
  * Encrypts a string value using AES-256-GCM
  * @param plaintext - The string to encrypt
  * @param config - Encryption configuration (optional)
  * @returns Base64 encoded encrypted data with salt and IV
  */
-export function encrypt(plaintext: string, config: CryptoConfig = DEFAULT_CRYPTO_CONFIG): string {
+export async function encrypt(
+  plaintext: string,
+  config: CryptoConfig = DEFAULT_CRYPTO_CONFIG
+): Promise<string> {
   if (!plaintext) {
     return plaintext;
   }
 
   try {
+    if (typeof crypto === "undefined" || !crypto.subtle) {
+      throw new Error("Web Crypto API is not available in this environment");
+    }
+
     const masterKey = getMasterKey();
-    const salt = randomBytes(config.saltLength);
-    const iv = randomBytes(config.ivLength);
-    const key = deriveKey(masterKey, salt);
+    const salt = new Uint8Array(getRandomBytes(config.saltLength));
+    const iv = new Uint8Array(getRandomBytes(config.ivLength));
+    const key = await deriveKey(masterKey, salt);
 
-    const cipher = createCipheriv(config.algorithm, key, iv) as CipherGCM;
+    // Convert plaintext to buffer
+    const plaintextBuffer = new TextEncoder().encode(plaintext);
 
-    let encrypted = cipher.update(plaintext, "utf8", "base64");
-    encrypted += cipher.final("base64");
+    // Generate random IV and encrypt
+    const encryptedBuffer = await crypto.subtle.encrypt(
+      {
+        name: "AES-GCM",
+        iv: iv,
+      },
+      key,
+      plaintextBuffer
+    );
 
-    const authTag = cipher.getAuthTag();
+    // Combine salt + iv + encrypted data
+    const saltArray = new Uint8Array(salt);
+    const ivArray = new Uint8Array(iv);
+    const encryptedArray = new Uint8Array(encryptedBuffer);
 
-    // Combine salt + iv + authTag + encrypted data
-    const combined = Buffer.concat([salt, iv, authTag, Buffer.from(encrypted, "base64")]);
+    const combined = new Uint8Array(saltArray.length + ivArray.length + encryptedArray.length);
+    combined.set(saltArray, 0);
+    combined.set(ivArray, saltArray.length);
+    combined.set(encryptedArray, saltArray.length + ivArray.length);
 
-    return combined.toString("base64");
+    // Convert to base64
+    return btoa(String.fromCharCode(...combined));
   } catch (error) {
     throw new Error(
       `Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -95,36 +150,48 @@ export function encrypt(plaintext: string, config: CryptoConfig = DEFAULT_CRYPTO
  * @param config - Encryption configuration (optional)
  * @returns Decrypted plaintext string
  */
-export function decrypt(
+export async function decrypt(
   encryptedData: string,
   config: CryptoConfig = DEFAULT_CRYPTO_CONFIG
-): string {
+): Promise<string> {
   if (!encryptedData) {
     return encryptedData;
   }
 
   try {
+    if (typeof crypto === "undefined" || !crypto.subtle) {
+      throw new Error("Web Crypto API is not available in this environment");
+    }
+
     const masterKey = getMasterKey();
-    const combined = Buffer.from(encryptedData, "base64");
+
+    // Decode base64
+    const combinedByteString = atob(encryptedData);
+    const combined = new Uint8Array(combinedByteString.length);
+    for (let i = 0; i < combinedByteString.length; i++) {
+      combined[i] = combinedByteString.charCodeAt(i);
+    }
 
     // Extract components
-    const salt = combined.subarray(0, config.saltLength);
-    const iv = combined.subarray(config.saltLength, config.saltLength + config.ivLength);
-    const authTag = combined.subarray(
-      config.saltLength + config.ivLength,
-      config.saltLength + config.ivLength + 16
+    const salt = combined.slice(0, config.saltLength);
+    const iv = combined.slice(config.saltLength, config.saltLength + config.ivLength);
+    const encrypted = combined.slice(config.saltLength + config.ivLength);
+
+    const key = await deriveKey(masterKey, salt);
+
+    // Decrypt
+    const decryptedBuffer = await crypto.subtle.decrypt(
+      {
+        name: "AES-GCM",
+        iv: new Uint8Array(iv),
+      },
+      key,
+      new Uint8Array(encrypted)
     );
-    const encrypted = combined.subarray(config.saltLength + config.ivLength + 16);
 
-    const key = deriveKey(masterKey, salt);
-
-    const decipher = createDecipheriv(config.algorithm, key, iv) as DecipherGCM;
-    decipher.setAuthTag(authTag);
-
-    let decrypted = decipher.update(encrypted, undefined, "utf8");
-    decrypted += decipher.final("utf8");
-
-    return decrypted;
+    // Convert back to string
+    const decryptedArray = new Uint8Array(decryptedBuffer);
+    return new TextDecoder().decode(decryptedArray);
   } catch (error) {
     throw new Error(
       `Decryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -141,12 +208,24 @@ export function decrypt(
  * @param value - The value to hash
  * @returns Hex encoded hash string
  */
-export function hash(value: string): string {
+export async function hash(value: string): Promise<string> {
   if (!value) {
     return "";
   }
 
-  return createHash("sha256").update(value.toLowerCase().trim()).digest("hex");
+  if (typeof crypto === "undefined" || !crypto.subtle) {
+    throw new Error("Web Crypto API is not available in this environment");
+  }
+
+  const normalizedValue = value.toLowerCase().trim();
+  const data = new TextEncoder().encode(normalizedValue);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = new Uint8Array(hashBuffer);
+
+  // Convert to hex string
+  return Array.from(hashArray)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 /**
@@ -155,15 +234,27 @@ export function hash(value: string): string {
  * @param salt - Optional salt for additional security
  * @returns Hex encoded hash string
  */
-export function hashPHI(value: string, salt?: string): string {
+export async function hashPHI(value: string, salt?: string): Promise<string> {
   if (!value) {
     return "";
+  }
+
+  if (typeof crypto === "undefined" || !crypto.subtle) {
+    throw new Error("Web Crypto API is not available in this environment");
   }
 
   const normalizedValue = value.toLowerCase().trim();
   const saltValue = salt || process.env.DATABASE_HASH_SALT || "default-salt";
 
-  return createHash("sha256").update(normalizedValue).update(saltValue).digest("hex");
+  // Concatenate value and salt before hashing
+  const data = new TextEncoder().encode(normalizedValue + saltValue);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = new Uint8Array(hashBuffer);
+
+  // Convert to hex string
+  return Array.from(hashArray)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 // ======================================
@@ -175,12 +266,12 @@ export function hashPHI(value: string, salt?: string): string {
  * @param obj - The object to encrypt
  * @returns Encrypted JSON string
  */
-export function encryptJSON(obj: unknown): string {
+export async function encryptJSON(obj: unknown): Promise<string> {
   if (!obj) {
     return "";
   }
 
-  return encrypt(JSON.stringify(obj));
+  return await encrypt(JSON.stringify(obj));
 }
 
 /**
@@ -188,13 +279,13 @@ export function encryptJSON(obj: unknown): string {
  * @param encryptedJSON - The encrypted JSON string
  * @returns Decrypted object
  */
-export function decryptJSON<T = unknown>(encryptedJSON: string): T | null {
+export async function decryptJSON<T = unknown>(encryptedJSON: string): Promise<T | null> {
   if (!encryptedJSON) {
     return null;
   }
 
   try {
-    const decrypted = decrypt(encryptedJSON);
+    const decrypted = await decrypt(encryptedJSON);
     return JSON.parse(decrypted) as T;
   } catch (error) {
     throw new Error(
@@ -212,12 +303,12 @@ export function decryptJSON<T = unknown>(encryptedJSON: string): T | null {
  * @param array - The array to encrypt
  * @returns Encrypted array string
  */
-export function encryptArray(array: string[]): string {
+export async function encryptArray(array: string[]): Promise<string> {
   if (!array || array.length === 0) {
     return "";
   }
 
-  return encrypt(JSON.stringify(array));
+  return await encrypt(JSON.stringify(array));
 }
 
 /**
@@ -225,13 +316,13 @@ export function encryptArray(array: string[]): string {
  * @param encryptedArray - The encrypted array string
  * @returns Decrypted string array
  */
-export function decryptArray(encryptedArray: string): string[] {
+export async function decryptArray(encryptedArray: string): Promise<string[]> {
   if (!encryptedArray) {
     return [];
   }
 
   try {
-    const decrypted = decrypt(encryptedArray);
+    const decrypted = await decrypt(encryptedArray);
     return JSON.parse(decrypted);
   } catch (error) {
     throw new Error(
@@ -280,10 +371,14 @@ export function isEncrypted(value: string): boolean {
 
   try {
     // Check if it's valid base64
-    const decoded = Buffer.from(value, "base64");
+    const combinedByteString = atob(value);
+    const decoded = new Uint8Array(combinedByteString.length);
+    for (let i = 0; i < combinedByteString.length; i++) {
+      decoded[i] = combinedByteString.charCodeAt(i);
+    }
 
-    // Check minimum length (salt + iv + authTag + some data)
-    const minLength = DEFAULT_CRYPTO_CONFIG.saltLength + DEFAULT_CRYPTO_CONFIG.ivLength + 16 + 1;
+    // Check minimum length (salt + iv + some data)
+    const minLength = DEFAULT_CRYPTO_CONFIG.saltLength + DEFAULT_CRYPTO_CONFIG.ivLength + 1;
     return decoded.length >= minLength;
   } catch {
     return false;
@@ -295,12 +390,12 @@ export function isEncrypted(value: string): boolean {
  * @param value - The value to encrypt
  * @returns Encrypted value
  */
-export function safeEncrypt(value: string): string {
+export async function safeEncrypt(value: string): Promise<string> {
   if (!value || isEncrypted(value)) {
     return value;
   }
 
-  return encrypt(value);
+  return await encrypt(value);
 }
 
 /**
@@ -308,10 +403,10 @@ export function safeEncrypt(value: string): string {
  * @param value - The value to decrypt
  * @returns Decrypted value
  */
-export function safeDecrypt(value: string): string {
+export async function safeDecrypt(value: string): Promise<string> {
   if (!value || !isEncrypted(value)) {
     return value;
   }
 
-  return decrypt(value);
+  return await decrypt(value);
 }
