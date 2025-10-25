@@ -8,6 +8,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { Separator } from "@workspace/ui/components/separator";
+import { Spinner } from "@workspace/ui/components/spinner";
 import { cn } from "@workspace/ui/lib/utils";
 
 export interface SignInFormProps {
@@ -165,7 +166,14 @@ export function SignInForm({
 
           {/* Login Button */}
           <Button type="submit" disabled={isLoading} className="w-full h-12 text-base font-medium">
-            {isLoading ? "Signing in..." : "Log in"}
+            {isLoading ? (
+              <>
+                <Spinner className="mr-2 h-4 w-4" />
+                Signing in...
+              </>
+            ) : (
+              "Log in"
+            )}
           </Button>
         </form>
       </div>

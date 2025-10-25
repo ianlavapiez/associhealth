@@ -94,6 +94,7 @@ export interface DentistrySidebarProps {
   currentBranchId?: string;
   onBranchChange?: (branch: Branch) => void;
   onLogout?: () => void;
+  isLoggingOut?: boolean;
   planInfo?: PlanInfo;
   user?: User;
 }
@@ -103,6 +104,7 @@ export function DentistrySidebar({
   currentBranchId = "main-branch",
   onBranchChange,
   onLogout,
+  isLoggingOut = false,
   planInfo = samplePlanInfo,
   user = sampleUser,
 }: DentistrySidebarProps) {
@@ -132,6 +134,7 @@ export function DentistrySidebar({
       user={user}
       planInfo={planInfo}
       onLogout={handleLogout}
+      isLoggingOut={isLoggingOut}
       className={className}
     />
   );

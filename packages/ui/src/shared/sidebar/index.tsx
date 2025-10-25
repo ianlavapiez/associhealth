@@ -19,6 +19,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@workspace/ui/components/select";
 import { Separator } from "@workspace/ui/components/separator";
+import { Spinner } from "@workspace/ui/components/spinner";
 import { cn } from "@workspace/ui/lib/utils";
 
 export interface Branch {
@@ -57,6 +58,7 @@ export interface SidebarProps {
   user: User;
   planInfo?: PlanInfo;
   onLogout: () => void;
+  isLoggingOut?: boolean;
   className?: string;
 }
 
@@ -68,6 +70,7 @@ export function Sidebar({
   user,
   planInfo,
   onLogout,
+  isLoggingOut = false,
   className,
 }: SidebarProps) {
   const handleNavigation = (href: string) => {
@@ -211,9 +214,13 @@ export function Sidebar({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Logout
+              <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
+                {isLoggingOut ? (
+                  <Spinner className="mr-2 h-4 w-4" />
+                ) : (
+                  <LogOut className="mr-2 h-4 w-4" />
+                )}
+                {isLoggingOut ? "Signing out..." : "Logout"}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
