@@ -1,40 +1,45 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
-
+import { toast } from "@workspace/ui/components/sonner";
 import { SignInPage, type SignInFormData } from "@workspace/ui/shared";
 
-// Custom illustration component using dentistry.png
-function DentistryIllustration() {
-  return (
-    <div className="flex items-center justify-center p-8">
-      <Image
-        src="/dentistry.png"
-        alt="Dentistry illustration"
-        width={700}
-        height={600}
-        className="max-w-full h-auto object-contain"
-        priority
-      />
-    </div>
-  );
-}
+import { AssocihealthLogo, DentistryIllustration } from "@/components/shared";
+import { useSignIn } from "@/hooks/use-auth";
+import { useAuthStore } from "@/lib/stores/auth-store";
 
 export function SignInComponent() {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { setLoading, setError, clearError } = useAuthStore();
+  const signInMutation = useSignIn();
 
   const handleSubmit = async (data: SignInFormData) => {
-    setIsLoading(true);
+    try {
+      setLoading(true);
+      clearError();
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+      const result = await signInMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      });
 
-    console.log("Sign in data:", data);
-    setIsLoading(false);
+      if (result.success) {
+        toast.success(result.message);
+        // Redirect to dashboard or home page after successful sign-in
+        router.push("/patients");
+      } else {
+        setError(result.message);
+        toast.error(result.message);
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unable to sign in. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleNavigateToSignUp = () => {
@@ -44,8 +49,8 @@ export function SignInComponent() {
   return (
     <SignInPage
       illustrationComponent={<DentistryIllustration />}
-      isLoading={isLoading}
-      logoComponent={<div className="text-xl font-bold text-blue-600">Associhealth</div>}
+      isLoading={signInMutation.isPending}
+      logoComponent={<AssocihealthLogo />}
       onNavigateToSignUp={handleNavigateToSignUp}
       onSubmit={handleSubmit}
     />

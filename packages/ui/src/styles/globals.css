@@ -124,4 +124,10 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Fix for Tailwind v4 cursor-pointer issue */
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
 }

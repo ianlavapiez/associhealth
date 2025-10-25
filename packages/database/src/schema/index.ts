@@ -2,29 +2,17 @@
 // Schema Re-exports
 // ======================================
 
+// Auth module (persons, users, personIdentifiers)
+export * from "./auth";
+
 // Enums
 export * from "./enums";
 
-// Appointments module
-export * from "./appointments";
+// Patient module (patients)
+export * from "./patient";
 
-// Auth module
-export * from "./auth";
-
-// Billing module
-export * from "./billing";
-
-// Dentistry module
-export * from "./dentistry";
-
-// Files module
-export * from "./files";
-
-// Medical module
-export * from "./medical";
-
-// Policies module
+// Policies module (RLS policies)
 export * from "./policies";
 
-// Practitioners module
+// Practitioners module (practitioners, practitioner_patients, branches, specialties)
 export * from "./practitioners";

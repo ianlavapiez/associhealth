@@ -1,6 +1,6 @@
 "use server";
 
-import { db, encrypt, hashPHI, timestamps, createServerClient } from "@workspace/database";
+import { db, timestamps, createServerClient } from "@workspace/database";
 import { persons, users } from "@workspace/database/schema";
 import { eq } from "drizzle-orm";
 
@@ -40,16 +40,31 @@ export async function signInAction(email: string, password: string): Promise<Sig
     });
 
     if (authError) {
+      console.error("authError", authError);
+
+      // Provide user-friendly error messages for common scenarios
+      if (authError.message.includes("Invalid login credentials")) {
+        return {
+          success: false,
+          message: "Invalid email or password. Please try again.",
+        };
+      }
+      if (authError.message.includes("Email not confirmed")) {
+        return {
+          success: false,
+          message: "Please check your email and click the confirmation link before signing in.",
+        };
+      }
       return {
         success: false,
-        message: authError.message,
+        message: "Unable to sign in. Please try again.",
       };
     }
 
     if (!authData.user) {
       return {
         success: false,
-        message: "Failed to sign in",
+        message: "Unable to sign in. Please try again.",
       };
     }
 
@@ -63,13 +78,13 @@ export async function signInAction(email: string, password: string): Promise<Sig
     if (!user) {
       return {
         success: false,
-        message: "User profile not found",
+        message: "Account not found. Please contact support.",
       };
     }
 
     return {
       success: true,
-      message: "Signed in successfully!",
+      message: "Welcome back! You've signed in successfully.",
       user: {
         id: user.id,
         email: authData.user.email!,
@@ -77,19 +92,10 @@ export async function signInAction(email: string, password: string): Promise<Sig
         createdAt: user.createdAt,
       },
     };
-  } catch (error) {
-    console.error("Sign in error:", error);
-
-    if (error instanceof Error) {
-      return {
-        success: false,
-        message: error.message,
-      };
-    }
-
+  } catch {
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "Unable to sign in. Please try again.",
     };
   }
 }
@@ -111,12 +117,10 @@ export async function signOutAction(): Promise<{ success: boolean; message: stri
       success: true,
       message: "Signed out successfully!",
     };
-  } catch (error) {
-    console.error("Sign out error:", error);
-
+  } catch {
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "Unable to sign out. Please try again.",
     };
   }
 }
@@ -134,7 +138,7 @@ export async function signUpAction(formData: SignUpFormData): Promise<SignUpResu
     if (existingUser.user) {
       return {
         success: false,
-        message: "A user with this email already exists",
+        message: "An account with this email already exists.",
       };
     }
 
@@ -145,16 +149,35 @@ export async function signUpAction(formData: SignUpFormData): Promise<SignUpResu
     });
 
     if (authError) {
+      // Provide user-friendly error messages for common scenarios
+      if (authError.message.includes("User already registered")) {
+        return {
+          success: false,
+          message: "An account with this email already exists.",
+        };
+      }
+      if (authError.message.includes("Password should be at least")) {
+        return {
+          success: false,
+          message: "Password is too short. Please choose a stronger password.",
+        };
+      }
+      if (authError.message.includes("Invalid email")) {
+        return {
+          success: false,
+          message: "Please enter a valid email address.",
+        };
+      }
       return {
         success: false,
-        message: authError.message,
+        message: "Unable to create account. Please try again.",
       };
     }
 
     if (!authData.user) {
       return {
         success: false,
-        message: "Failed to create user account",
+        message: "Unable to create account. Please try again.",
       };
     }
 
@@ -166,8 +189,7 @@ export async function signUpAction(formData: SignUpFormData): Promise<SignUpResu
       const [person] = await tx
         .insert(persons)
         .values({
-          email: await encrypt(validatedData.email),
-          emailHash: await hashPHI(validatedData.email),
+          email: validatedData.email,
           createdAt: timestamps.createdAt,
           updatedAt: timestamps.updatedAt,
         })
@@ -215,18 +237,17 @@ export async function signUpAction(formData: SignUpFormData): Promise<SignUpResu
       },
     };
   } catch (error) {
-    console.error("Sign up error:", error);
-
-    if (error instanceof Error) {
+    console.error("Auth actions error:", error);
+    if (error instanceof Error && error.message.includes("Failed to")) {
       return {
         success: false,
-        message: error.message,
+        message: "Unable to create account. Please try again.",
       };
     }
 
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again.",
+      message: "Unable to create account. Please try again.",
     };
   }
 }

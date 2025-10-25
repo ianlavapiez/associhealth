@@ -9,7 +9,7 @@ export {
   type SignUpFormData,
   SignUpPage,
   type SignUpPageProps,
-} from "./sign-in";
+} from "./auth";
 export { ThemeSwitcher, type ThemeSwitcherProps } from "./theme-switcher";
 export {
   Sidebar,
